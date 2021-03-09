@@ -6,6 +6,7 @@ use App\Models\CompanyAccessToken;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Psr7\Request;
+use Illuminate\Support\Facades\Log;
 
 class OTApi {
 
@@ -33,8 +34,8 @@ class OTApi {
         return $this->request('GET', $uri, $options);
     }
 
-    public function delete(string $uri, array $options = []) {
-        return $this->request('DELETE', $uri, $options);
+    public function delete(string $uri, array $options = [], $body = null) {
+        return $this->request('DELETE', $uri, $options, $body);
     }
 
     public function head(string $uri, array $options = []) {
@@ -45,21 +46,25 @@ class OTApi {
         return $this->request('OPTIONS', $uri, $options);
     }
 
-    public function patch(string $uri, array $options = []) {
-        return $this->request('PATCH', $uri, $options);
+    public function patch(string $uri, array $options = [], $body = null) {
+        return $this->request('PATCH', $uri, $options, $body);
     }
 
-    public function post(string $uri, array $options = []) {
-        return $this->request('POST', $uri, $options);
+    public function post(string $uri, array $options = [], $body = null) {
+        return $this->request('POST', $uri, $options, $body);
     }
 
-    public function put(string $uri, array $options = []) {
-        return $this->request('PUT', $uri, $options);
+    public function put(string $uri, array $options = [], $body = null) {
+        return $this->request('PUT', $uri, $options, $body);
     }
 
-    public function request(string $method, string $uri, array $options = []) {
-        $request = new Request($method, $uri, $options);
+    public function request(string $method, string $uri, array $options = [], $body = null) {
+        $request = new Request($method, $uri, $options, $body);
         $request = $request->withHeader('Authorization', 'Bearer ' . $this->getAccessToken());
+        if(!is_null($body)) {
+            $request = $request->withHeader('Accept', 'application/json');
+            $request = $request->withHeader('Content-Type', 'application/json;charset=UTF-8');
+        }
 
         try {
             $response = $this->client->send($request);
@@ -67,7 +72,7 @@ class OTApi {
             $response = $e->getResponse();
             if ($response->getStatusCode() == 401) {
                 $this->refreshToken();
-                $request = $request = new Request($method, $uri, $options);
+                $request = $request = new Request($method, $uri, $options, $body);
                 $request = $request->withHeader('Authorization', 'Bearer ' . $this->getAccessToken());
 
                 Log::info('Retrying request for ' . $this->companyAccessToken->guid);
@@ -87,6 +92,6 @@ class OTApi {
 
     public function refreshToken() {
         Log::info('Refreshing token for cid: ' . $this->companyAccessToken->guid);
-        $this->companyAccessToke->refreshToken();
+        $this->companyAccessToken->refreshToken();
     }
 }

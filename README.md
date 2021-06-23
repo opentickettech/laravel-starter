@@ -38,6 +38,27 @@ you get a public url:
 
 set the env value `OPENTICKETTECH_REDIRECT_URI` and the redirect url of your Client in dashboard appropriately, make sure to add `/redirect` at end of route. 
 
+### Debugging
+The container already has XDebug installed. To run tests from the shell, use commands like:
+```
+docker exec -it laravel-starter_laravel.test_1 /var/www/html/vendor/phpunit/phpunit/phpunit --filter NameOfTestCaseToRun
+```
+
+In order to access XDebug from PhpStorm you have to go through the following setup process:
+- Open your project
+- Open its settings with `Ctrl+Alt+S`
+- In the `PHP` menu, next to `CLI Interpreter`, click `...`
+- Click `+` and then `From Docker, Vagrant, VM, WSL, Remote...`
+- Select `Docker Compose`
+- For `Service`, select `laravel.test`
+- Click "OK" three times to save everything
+- In the debug toolbar, click `Add Configuration...`
+- In the `Run/Debug Configurations` window that opens, click `Edit configuration templates...`
+- Select `PHPUnit`
+- Under `Command line`, next to `Interpreter`, select `laravel.test`
+- Click "OK" twice to save everything
+- You can now run tests through PhpStorm.
+
 ### More information
 [API docs - https://docs.openticket.tech/](https://docs.openticket.tech/)
 

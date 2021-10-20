@@ -61,6 +61,8 @@ class OTApi {
     public function request(string $method, string $uri, array $options = [], $body = null) {
         $request = new Request($method, $uri, $options, $body);
         $request = $request->withHeader('Authorization', 'Bearer ' . $this->getAccessToken());
+        $request = $request->withHeader('Company', [$this->getCompanyId()]);
+
         if(!is_null($body)) {
             $request = $request->withHeader('Accept', 'application/json');
             $request = $request->withHeader('Content-Type', 'application/json;charset=UTF-8');
@@ -88,6 +90,10 @@ class OTApi {
 
     public function getAccessToken() {
         return $this->companyAccessToken->access_token;
+    }
+
+    public function getCompanyId() {
+        return $this->companyAccessToken->guid;
     }
 
     public function refreshToken() {

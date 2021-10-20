@@ -42,24 +42,37 @@ Route::get('/redirect', function (Request $request) {
             'name'  => $response['info']['user']['name'],
             'email' => $response['info']['user']['email'],
         ]);
-        $cid = $response['info']['company']['guid'];
-        if(is_null($companyAccessToken = \App\Models\CompanyAccessToken::find($cid))){
-            $companyAccessToken = \App\Models\CompanyAccessToken::create([
-                'guid' => $cid,
-                'name' => $response['info']['company']['name'],
-                'access_token' => $response['access_token'],
-                'expires_at' => \Carbon\Carbon::now()->timestamp + $response['expires_in'],
-                'refresh_token' => $response['refresh_token'],
-                'refresh_token_expires_at' =>\Carbon\Carbon::now()->timestamp + $response['refresh_token_expires_in'],
-            ]);
+
+        $companies = [];
+        if(!is_null(@$response['info']['companies'][0]['guid'])){ // new type token
+            foreach($response['info']['companies'] as $company){
+                $companies[] = $company;
+            }
         }
-        else{
-            Log::info("cid: $cid already connected");
+        else {
+            $companies[] = $response['info']['company'];
         }
 
-        $user->allCompanyAccessTokens()->syncWithoutDetaching($companyAccessToken);
+        foreach($companies as $company){
+            $companyId = $company['guid'];
+            if(is_null($cat = \App\Models\CompanyAccessToken::find($companyId))){
+                $cat = \App\Models\CompanyAccessToken::create([
+                    'guid' => $companyId,
+                    'name' => $company['name'],
+                    'access_token' => $response['access_token'],
+                    'expires_at' => \Carbon\Carbon::now()->timestamp + $response['expires_in'],
+                    'refresh_token' => $response['refresh_token'],
+                    'refresh_token_expires_at' =>\Carbon\Carbon::now()->timestamp + $response['refresh_token_expires_in'],
+                ]);
+            }
+            else{
+                Log::info("cid: $companyId already connected");
+            }
 
-        $user->last_company_id = $companyAccessToken->guid;
+            $user->allCompanyAccessTokens()->syncWithoutDetaching($cat);
+            $user->last_company_id = $companyId;
+        }
+
         $user->save();
 
         Cookie::queue('user_id', $user->guid, 60*24*60); // remember 60 days;

@@ -1633,12 +1633,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/opentickettech/socialite.git",
-                "reference": "bedf2b0e11bc4045744c6bea00c2ba6f2cb9f332"
+                "reference": "50ebc38230b559720543949ba496c80b1d4cd8b6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/opentickettech/socialite/zipball/bedf2b0e11bc4045744c6bea00c2ba6f2cb9f332",
-                "reference": "bedf2b0e11bc4045744c6bea00c2ba6f2cb9f332",
+                "url": "https://api.github.com/repos/opentickettech/socialite/zipball/50ebc38230b559720543949ba496c80b1d4cd8b6",
+                "reference": "50ebc38230b559720543949ba496c80b1d4cd8b6",
                 "shasum": ""
             },
             "require": {
@@ -1646,6 +1646,7 @@
                 "php": "^7.2 || ^8.0",
                 "socialiteproviders/manager": "~4.0"
             },
+            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -1663,7 +1664,11 @@
                 }
             ],
             "description": "Opentickettech OAuth2 Provider for Laravel Socialite",
-            "time": "2021-02-10T22:24:38+00:00"
+            "support": {
+                "issues": "https://github.com/opentickettech/socialite/issues",
+                "source": "https://github.com/opentickettech/socialite/tree/main"
+            },
+            "time": "2021-08-04T11:21:16+00:00"
         },
         {
             "name": "opis/closure",
@@ -6835,5 +6840,6 @@
     "platform": {
         "php": "^7.3|^8.0"
     },
-    "platform-dev": []
+    "platform-dev": [],
+    "plugin-api-version": "2.1.0"
 }

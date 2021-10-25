@@ -1,5 +1,10 @@
 # OpenTicket.tech starter template
 
+## Communication
+
+Because this is highly under construction, if you decide to use this boilerplate, please signup on our mailing list so we can let you know if anything significant changes
+http://eepurl.com/hLEE1D
+
 ### What does this package do?
 This is meant as starter package for start making applications related to [Openticket.tech](https://www.openticket.tech/), probaly also known as [Eventix](https://eventix.io/).
 This package include all OAuth2 logic to get you up to speed, all token handling is taken care of.
